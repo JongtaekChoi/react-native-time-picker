@@ -3,6 +3,7 @@ import {
   PanResponder,
   StyleSheet,
   Text,
+  TextStyle,
   View,
   ViewStyle,
 } from 'react-native';
@@ -10,17 +11,21 @@ import React, { useMemo, useRef } from 'react';
 
 const Value = Animated.createAnimatedComponent(Text);
 
-interface WheelProps<T> {
-  value: T;
-  setValue: (value: T) => void;
-  values: T[];
-  onScroll?: (scrollState: boolean) => void;
-  renderCount?: number;
+export interface WheelStyleProps {
   containerStyle?: ViewStyle;
   itemHeight?: number;
   itemGap?: number;
   selectedColor?: string;
   disabledColor?: string;
+  textStyle?: TextStyle;
+}
+
+export interface WheelProps<T> extends WheelStyleProps {
+  value: T;
+  setValue: (value: T) => void;
+  values: T[];
+  onScroll?: (scrollState: boolean) => void;
+  renderCount?: number;
 }
 
 export default function Wheel<T>({
@@ -28,8 +33,9 @@ export default function Wheel<T>({
   setValue,
   onScroll,
   values,
-  renderCount = 21,
   containerStyle,
+  textStyle,
+  renderCount = 21,
   itemHeight = 15,
   itemGap = 10,
   selectedColor = 'black',
@@ -101,25 +107,28 @@ export default function Wheel<T>({
       >
         {displayValues.map((displayValue: T, index: number) => (
           <Value
-            style={{
-              height: itemHeight,
-              transform: [
-                {
-                  translateY: translateY.current,
-                },
-                {
-                  rotateX: translateY.current.interpolate({
-                    extrapolate: 'clamp',
-                    inputRange: [
-                      -50 + (currentIndex - index) * 25,
-                      50 + (currentIndex - index) * 25,
-                    ],
-                    outputRange: ['-90deg', '90deg'],
-                  }),
-                },
-              ],
-              color: displayValue === value ? selectedColor : disabledColor,
-            }}
+            style={[
+              textStyle,
+              {
+                height: itemHeight,
+                transform: [
+                  {
+                    translateY: translateY.current,
+                  },
+                  {
+                    rotateX: translateY.current.interpolate({
+                      extrapolate: 'clamp',
+                      inputRange: [
+                        -50 + (currentIndex - index) * 25,
+                        50 + (currentIndex - index) * 25,
+                      ],
+                      outputRange: ['-90deg', '90deg'],
+                    }),
+                  },
+                ],
+                color: displayValue === value ? selectedColor : disabledColor,
+              },
+            ]}
             key={`${displayValue}`}
           >
             {displayValue}

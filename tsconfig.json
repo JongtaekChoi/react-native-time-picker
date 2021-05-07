@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-time-picker": ["./src/index"]
+      "react-native-wheel-time-picker": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

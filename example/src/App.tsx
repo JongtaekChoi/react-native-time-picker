@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import TimePicker from 'react-native-time-picker';
+import TimePicker from 'react-native-wheel-time-picker';
 import { useMemo } from 'react';
 
 const MILLISECONDS_PER_MINUTE = 60 * 1000;

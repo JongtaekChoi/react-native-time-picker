@@ -8,8 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-
-import Wheel from './Wheel';
+import Wheel, { WheelStyleProps } from './Wheel';
 
 const MILLISECONDS_PER_MINUTE = 60 * 1000;
 const MILLISECONDS_PER_HOUR = MILLISECONDS_PER_MINUTE * 60;
@@ -42,6 +41,7 @@ interface Props {
   containerStyle?: StyleProp<ViewStyle>;
   onScroll?: (scrollState: boolean) => void;
   textStyle?: TextStyle;
+  wheelProps?: WheelStyleProps;
 }
 
 export default function TimePicker({
@@ -51,6 +51,7 @@ export default function TimePicker({
   onScroll,
   containerStyle,
   textStyle,
+  wheelProps = {},
 }: Props): React.ReactElement {
   const [current, setCurrent] = useState(
     (value ?? Date.now()) % MILLISECONDS_PER_DAY
@@ -97,6 +98,8 @@ export default function TimePicker({
         values={TWENTY_FOUR_LIST}
         setValue={(newValue) => changeTimeValue('hour', parseInt(newValue))}
         onScroll={onScroll}
+        textStyle={textStyle}
+        {...wheelProps}
       />
       <Text style={textStyle}>:</Text>
       <Wheel
@@ -104,6 +107,8 @@ export default function TimePicker({
         values={SIXTY_LIST}
         setValue={(newValue) => changeTimeValue('minute', parseInt(newValue))}
         onScroll={onScroll}
+        textStyle={textStyle}
+        {...wheelProps}
       />
       <Text style={textStyle}>:</Text>
       <Wheel
@@ -111,6 +116,8 @@ export default function TimePicker({
         values={SIXTY_LIST}
         setValue={(newValue) => changeTimeValue('second', parseInt(newValue))}
         onScroll={onScroll}
+        textStyle={textStyle}
+        {...wheelProps}
       />
     </View>
   );
