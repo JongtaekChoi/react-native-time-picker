@@ -1,0 +1,22 @@
+{
+  "name": "react-native-time-picker-example",
+  "displayName": "TimePicker Example",
+  "expo": {
+    "name": "react-native-time-picker-example",
+    "slug": "react-native-time-picker-example",
+    "description": "Example app for react-native-time-picker",
+    "privacy": "public",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
