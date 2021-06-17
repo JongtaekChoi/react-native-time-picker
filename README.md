@@ -4,8 +4,7 @@ Simple and pure js time picker for react-native. It provides the same UI for And
 
 |                                                            Android                                                             |                                                              IOS                                                               |
 | :----------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
-| ![Jun-17-2021 12-57-47](https://user-images.githubusercontent.com/17980230/122329052-b16b9480-cf6b-11eb-867a-13cccf114b91.gif)
-| ![Jun-17-2021 12-59-10](https://user-images.githubusercontent.com/17980230/122329138-d4964400-cf6b-11eb-80b6-2a20838b4502.gif)
+| ![Jun-17-2021 12-57-47](https://user-images.githubusercontent.com/17980230/122329052-b16b9480-cf6b-11eb-867a-13cccf114b91.gif) | ![Jun-17-2021 12-59-10](https://user-images.githubusercontent.com/17980230/122329138-d4964400-cf6b-11eb-80b6-2a20838b4502.gif)
  |
 
 ## Installation
