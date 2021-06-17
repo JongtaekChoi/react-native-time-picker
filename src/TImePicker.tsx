@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 /* eslint-disable radix */
 import {
   StyleProp,
@@ -17,9 +17,9 @@ const MILLISECONDS_PER_DAY = MILLISECONDS_PER_HOUR * 24;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
-    width: 200,
+    minWidth: 100,
     height: 100,
     borderWidth: 1,
     borderColor: 'gray',
@@ -27,31 +27,38 @@ const styles = StyleSheet.create({
   },
 });
 
-const TWENTY_FOUR_LIST = new Array(24)
+function createNumberList(num: number) {
+  return new Array(num)
+    .fill(0)
+    .map((_, index) => (index < 10 ? `0${index}` : `${index}`));
+}
+
+const TWENTY_FOUR_LIST = createNumberList(24);
+const TWELVE_LIST = new Array(12)
   .fill(0)
-  .map((_, index) => (index < 10 ? `0${index}` : `${index}`));
-const SIXTY_LIST = new Array(60)
-  .fill(0)
-  .map((_, index) => (index < 10 ? `0${index}` : `${index}`));
+  .map((_, index) => (index + 1 < 10 ? `0${index + 1}` : `${index + 1}`));
+const SIXTY_LIST = createNumberList(60);
 
 interface Props {
-  label?: string;
   value?: number | null; // milliseconds of date
   onChange: (value: number) => void;
   containerStyle?: StyleProp<ViewStyle>;
   onScroll?: (scrollState: boolean) => void;
   textStyle?: TextStyle;
   wheelProps?: WheelStyleProps;
+  use24HourSystem?: boolean;
+  showSeconds?: boolean;
 }
 
 export default function TimePicker({
-  label,
   value,
   onChange,
   onScroll,
   containerStyle,
   textStyle,
   wheelProps = {},
+  use24HourSystem,
+  showSeconds,
 }: Props): React.ReactElement {
   const [current, setCurrent] = useState(
     (value ?? Date.now()) % MILLISECONDS_PER_DAY
@@ -90,19 +97,45 @@ export default function TimePicker({
     },
     [hour, minute, onChange, second]
   );
+
+  const displayHourValue = useMemo(() => {
+    let displayHour = use24HourSystem ? hour : hour % 12;
+    if (!use24HourSystem && displayHour === 0) displayHour = 12;
+    return displayHour < 10 ? `0${displayHour}` : `${displayHour}`;
+  }, [hour, use24HourSystem]);
   return (
     <View style={[styles.container, containerStyle]}>
-      {label && <Text style={textStyle}>{label}</Text>}
+      {!use24HourSystem && (
+        <Wheel
+          key={'am/pm'}
+          value={hour >= 12 ? 'PM' : 'AM'}
+          values={['AM', 'PM']}
+          setValue={(newValue) => {
+            changeTimeValue('hour', (hour % 12) + (newValue === 'PM' ? 12 : 0));
+          }}
+          renderCount={2}
+          onScroll={onScroll}
+          textStyle={textStyle}
+          {...wheelProps}
+        />
+      )}
       <Wheel
-        value={hour < 10 ? `0${hour}` : `${hour}`}
-        values={TWENTY_FOUR_LIST}
-        setValue={(newValue) => changeTimeValue('hour', parseInt(newValue))}
+        key={'hour'}
+        value={displayHourValue}
+        values={use24HourSystem ? TWENTY_FOUR_LIST : TWELVE_LIST}
+        setValue={(newValue) => {
+          changeTimeValue(
+            'hour',
+            hour - (hour % 12) + (parseInt(newValue) % 12)
+          );
+        }}
         onScroll={onScroll}
         textStyle={textStyle}
         {...wheelProps}
       />
       <Text style={textStyle}>:</Text>
       <Wheel
+        key={'min'}
         value={minute < 10 ? `0${minute}` : `${minute}`}
         values={SIXTY_LIST}
         setValue={(newValue) => changeTimeValue('minute', parseInt(newValue))}
@@ -110,15 +143,22 @@ export default function TimePicker({
         textStyle={textStyle}
         {...wheelProps}
       />
-      <Text style={textStyle}>:</Text>
-      <Wheel
-        value={second < 10 ? `0${second}` : `${second}`}
-        values={SIXTY_LIST}
-        setValue={(newValue) => changeTimeValue('second', parseInt(newValue))}
-        onScroll={onScroll}
-        textStyle={textStyle}
-        {...wheelProps}
-      />
+      {showSeconds && (
+        <>
+          <Text style={textStyle}>:</Text>
+          <Wheel
+            key={'sec'}
+            value={second < 10 ? `0${second}` : `${second}`}
+            values={SIXTY_LIST}
+            setValue={(newValue) =>
+              changeTimeValue('second', parseInt(newValue))
+            }
+            onScroll={onScroll}
+            textStyle={textStyle}
+            {...wheelProps}
+          />
+        </>
+      )}
     </View>
   );
 }

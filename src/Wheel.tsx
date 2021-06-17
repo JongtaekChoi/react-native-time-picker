@@ -10,6 +10,7 @@ import {
 import React, { useMemo, useRef } from 'react';
 
 const Value = Animated.createAnimatedComponent(Text);
+const DISPLAY_COUNT = 5;
 
 export interface WheelStyleProps {
   containerStyle?: ViewStyle;
@@ -35,13 +36,18 @@ export default function Wheel<T>({
   values,
   containerStyle,
   textStyle,
-  renderCount = 21,
+  renderCount: renderCountProp = 21,
   itemHeight = 15,
   itemGap = 10,
   selectedColor = 'black',
   disabledColor = 'gray',
 }: WheelProps<T>): React.ReactElement {
   const translateY = useRef(new Animated.Value(0));
+  const renderCount = Math.max(
+    DISPLAY_COUNT,
+    Math.min(values.length - (1 - (values.length % 2)), renderCountProp)
+  );
+  const circular = values.length >= DISPLAY_COUNT;
 
   const panResponder = React.useMemo(() => {
     return PanResponder.create({
@@ -59,32 +65,41 @@ export default function Wheel<T>({
         onScroll && onScroll(false);
         translateY.current.extractOffset();
         const valueIndex = values.indexOf(value);
-        const newValueIndex =
+        let newValueIndex =
           valueIndex - Math.round(gestureState.dy / (itemHeight + itemGap));
-        const newValue =
-          values[(newValueIndex + values.length) % values.length];
-        setValue(newValue);
+        if (circular)
+          newValueIndex = (newValueIndex + values.length) % values.length;
+        else {
+          if (newValueIndex < 0) newValueIndex = 0;
+          else if (newValueIndex >= values.length)
+            newValueIndex = values.length - 1;
+        }
+        const newValue = values[newValueIndex];
+        if (newValue === value) {
+          translateY.current.setOffset(0);
+
+          translateY.current.setValue(0);
+        } else setValue(newValue);
       },
     });
-  }, [itemGap, itemHeight, onScroll, setValue, value, values]);
+  }, [circular, itemGap, itemHeight, onScroll, setValue, value, values]);
 
   const displayValues = useMemo(() => {
-    if (values.length < 5) return values;
-    let currentIndex = values.indexOf(value);
-    if (currentIndex === -1) currentIndex = -1;
-    return new Array(renderCount)
-      .fill(0)
-      .map(
-        (_, index) =>
-          values[
-            (currentIndex +
-              index -
-              Math.floor(renderCount / 2) +
-              values.length) %
-              values.length
-          ]
-      );
-  }, [values, value, renderCount]);
+    let valueIndex = values.indexOf(value);
+    if (valueIndex === -1) valueIndex = -1;
+    const centerIndex = Math.floor(renderCount / 2);
+
+    return new Array(renderCount).fill(undefined).map((_, index) => {
+      let targetIndex = valueIndex + index - centerIndex;
+      if (targetIndex < 0 || targetIndex >= values.length) {
+        if (!circular) {
+          return null;
+        }
+        targetIndex = (targetIndex + values.length) % values.length;
+      }
+      return values[targetIndex];
+    });
+  }, [values, value, renderCount, circular]);
 
   const currentIndex = useMemo(() => {
     translateY.current.setValue(0);
@@ -105,7 +120,7 @@ export default function Wheel<T>({
         key={displayValues.join(',')}
         style={[styles.contentContainer, { height: contentHeight }]}
       >
-        {displayValues.map((displayValue: T, index: number) => (
+        {displayValues.map((displayValue: T | null, index: number) => (
           <Value
             style={[
               textStyle,
@@ -129,7 +144,7 @@ export default function Wheel<T>({
                 color: displayValue === value ? selectedColor : disabledColor,
               },
             ]}
-            key={`${displayValue}`}
+            key={`${displayValue ?? 'null' + index}`}
           >
             {displayValue}
           </Value>
