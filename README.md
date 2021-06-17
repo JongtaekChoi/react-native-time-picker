@@ -4,7 +4,9 @@ Simple and pure js time picker for react-native. It provides the same UI for And
 
 |                                                            Android                                                             |                                                              IOS                                                               |
 | :----------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
-| ![May-08-2021 02-32-28](https://user-images.githubusercontent.com/17980230/117487312-c6dab100-af1f-11eb-8652-da2b4b1e2f33.gif) | ![May-08-2021 02-32-42](https://user-images.githubusercontent.com/17980230/117487327-cb9f6500-af1f-11eb-835e-3e6120721923.gif) |
+| ![Jun-17-2021 12-57-47](https://user-images.githubusercontent.com/17980230/122329052-b16b9480-cf6b-11eb-867a-13cccf114b91.gif)
+| ![Jun-17-2021 12-59-10](https://user-images.githubusercontent.com/17980230/122329138-d4964400-cf6b-11eb-80b6-2a20838b4502.gif)
+ |
 
 ## Installation
 
@@ -24,6 +26,8 @@ npm install react-native-wheel-time-picker
 | containerStyle |           | ViewStyle                      | undefined | container style                                                                                                    |
 | onScroll       |           | (scrollState: boolean) => void | undefined | a callback function. it may be used when the TimePicker is inside of a scroll view to preventing the outer scroll. |
 | textStyle      |           | TextStyle                      | undefined | text style                                                                                                         |
+| use24HourSystem|           | boolean                        | undefined | show the time in 24-hour system format                   |
+| showSeconds    |           | boolean                        | undefined | show seconds value                |
 | wheelProps     |           | StyleProps type of Wheel       | undefined | see next                                                                                                           |
 
 ### Wheel StyleProps
@@ -62,7 +66,7 @@ const MILLISECONDS_PER_DAY = 24 * MILLISECONDS_PER_HOUR;
 
 export default function App() {
   const [timeValue, setTimeValue] = useState(Date.now() % MILLISECONDS_PER_DAY);
-  const [hour, min, sec] = useMemo(() => {
+  const [hour, min] = useMemo(() => {
     return [
       Math.floor(timeValue / MILLISECONDS_PER_HOUR),
       Math.floor((timeValue % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE),
@@ -77,7 +81,7 @@ export default function App() {
       />
       <Text style={styles.timeValue}>{`${hour < 10 ? '0' : ''}${hour}:${
         min < 10 ? '0' : ''
-      }${min}:${sec < 10 ? '0' : ''}${sec}`}</Text>
+      }${min}`}</Text>
     </View>
   );
 }
