@@ -126,7 +126,7 @@ export default function TimePicker({
         setValue={(newValue) => {
           changeTimeValue(
             'hour',
-            hour - (hour % 12) + (parseInt(newValue) % 12)
+            (parseInt(newValue) % 12) + (hour >= 12 ? 12 : 0)
           );
         }}
         onScroll={onScroll}

@@ -10,7 +10,7 @@ const MILLISECONDS_PER_DAY = 24 * MILLISECONDS_PER_HOUR;
 
 export default function App() {
   const [timeValue, setTimeValue] = useState(Date.now() % MILLISECONDS_PER_DAY);
-  const [hour, min, sec] = useMemo(() => {
+  const [hour, min] = useMemo(() => {
     return [
       Math.floor(timeValue / MILLISECONDS_PER_HOUR),
       Math.floor((timeValue % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE),
@@ -25,7 +25,7 @@ export default function App() {
       />
       <Text style={styles.timeValue}>{`${hour < 10 ? '0' : ''}${hour}:${
         min < 10 ? '0' : ''
-      }${min}:${sec < 10 ? '0' : ''}${sec}`}</Text>
+      }${min}`}</Text>
     </View>
   );
 }
