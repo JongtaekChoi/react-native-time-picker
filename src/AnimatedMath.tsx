@@ -24,7 +24,10 @@ function normalize(animated: Animated.Animated): Animated.Animated {
   return Animated.add(
     Animated.modulo(Animated.add(animated, Math.PI), Math.PI * 2),
     -Math.PI
-  );
+  ).interpolate({
+    inputRange: [-Math.PI, -Math.PI / 2, Math.PI / 2, Math.PI],
+    outputRange: [0, -Math.PI / 2, Math.PI / 2, 0],
+  });
 }
 
 export { sin, normalize };

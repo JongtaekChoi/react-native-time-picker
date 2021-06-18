@@ -101,6 +101,19 @@ const styles = StyleSheet.create({
 });
 ```
 
+## Animated sine function
+The sin function of the AnimatedMath.ts file is really inspired by 'react-native-animated-math' package. We tried to import the package and use it, but there was a performance issue, so we created a new function that omitted some terms. The function uses the Taylor series approximation as below.
+```
+ x - x^3 / 3! + x^5 / 5! - x^7 / 7!
+``` 
+The x value range is [-PI , PI] so it's maximum error will be 
+```
+PI^9 / 9! = 0.08214 .....
+```
+If the x range is [-PI/2, PI/2] than the maximum error will be about 0.00016 ....
+
+
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
