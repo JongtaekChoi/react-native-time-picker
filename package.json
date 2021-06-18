@@ -1,6 +1,6 @@
 {
   "name": "react-native-wheel-time-picker",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "simple pure js time picker for react-native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
