@@ -112,7 +112,6 @@ export default function TimePicker({
           setValue={(newValue) => {
             changeTimeValue('hour', (hour % 12) + (newValue === 'PM' ? 12 : 0));
           }}
-          renderCount={2}
           onScroll={onScroll}
           textStyle={textStyle}
           {...wheelProps}

@@ -12,7 +12,6 @@ import React, { useMemo, useRef, useState } from 'react';
 import AnimatedMath from 'react-native-animated-math';
 
 const Value = Animated.createAnimatedComponent(Text);
-const DISPLAY_COUNT = 5;
 
 export interface WheelStyleProps {
   containerStyle?: ViewStyle;
@@ -29,7 +28,7 @@ export interface WheelProps<T> extends WheelStyleProps {
   setValue: (value: T) => void;
   values: T[];
   onScroll?: (scrollState: boolean) => void;
-  renderCount?: number;
+  displayCount?: number;
 }
 
 export default function Wheel<T>({
@@ -39,18 +38,15 @@ export default function Wheel<T>({
   values,
   containerStyle,
   textStyle,
-  renderCount: renderCountProp = 21,
   itemHeight = 15,
   selectedColor = 'black',
   disabledColor = 'gray',
   wheelHeight,
+  displayCount = 5,
 }: WheelProps<T>): React.ReactElement {
   const translateY = useRef(new Animated.Value(0));
-  const renderCount = Math.max(
-    DISPLAY_COUNT,
-    Math.min(renderCountProp, values.length * 2)
-  );
-  const circular = values.length >= DISPLAY_COUNT;
+  const renderCount = displayCount * 4 + 1;
+  const circular = values.length >= displayCount;
   const [height, setHeight] = useState(
     typeof containerStyle?.height === 'number' ? containerStyle.height : 100
   );
@@ -116,8 +112,8 @@ export default function Wheel<T>({
         .interpolate({
           inputRange: [-radius, radius],
           outputRange: [
-            -radius + ((radius * 2) / 5) * (index - currentIndex),
-            radius + ((radius * 2) / 5) * (index - currentIndex),
+            -radius + ((radius * 2) / displayCount) * (index - currentIndex),
+            radius + ((radius * 2) / displayCount) * (index - currentIndex),
           ],
           extrapolate: 'extend',
         })
@@ -127,7 +123,7 @@ export default function Wheel<T>({
           // extrapolate: 'clamp'
         })
     );
-  }, [displayValues, radius, value]);
+  }, [displayValues, radius, value, displayCount]);
 
   return (
     <View
