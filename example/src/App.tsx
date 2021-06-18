@@ -20,6 +20,11 @@ export default function App() {
   return (
     <View style={styles.container}>
       <TimePicker
+        containerStyle={styles.timePickerContainer}
+        wheelProps={{
+          wheelHeight: 70,
+          itemHeight: 15,
+        }}
         value={timeValue}
         onChange={(newValue) => setTimeValue(newValue)}
       />
@@ -35,6 +40,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#ededed',
+  },
+  timePickerContainer: {
+    height: 90,
+    backgroundColor: 'white',
   },
   timeValue: {
     marginVertical: 20,

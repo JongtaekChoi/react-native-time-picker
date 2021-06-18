@@ -1,4 +1,4 @@
-import TimePicker from './TImePicker';
+import TimePicker from './TimePickerWheel';
 import Wheel from './Wheel';
 
 export { Wheel };

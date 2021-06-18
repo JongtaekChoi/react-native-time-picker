@@ -21,9 +21,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minWidth: 100,
     height: 100,
-    borderWidth: 1,
-    borderColor: 'gray',
     overflow: 'hidden',
+    borderRadius: 4,
   },
 });
 

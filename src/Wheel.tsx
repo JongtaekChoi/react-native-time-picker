@@ -21,6 +21,7 @@ export interface WheelStyleProps {
   selectedColor?: string;
   disabledColor?: string;
   textStyle?: TextStyle;
+  wheelHeight?: number;
 }
 
 export interface WheelProps<T> extends WheelStyleProps {
@@ -40,16 +41,20 @@ export default function Wheel<T>({
   textStyle,
   renderCount: renderCountProp = 21,
   itemHeight = 15,
-  itemGap = 5,
   selectedColor = 'black',
   disabledColor = 'gray',
+  wheelHeight,
 }: WheelProps<T>): React.ReactElement {
   const translateY = useRef(new Animated.Value(0));
-  const renderCount = Math.max(DISPLAY_COUNT, renderCountProp);
+  const renderCount = Math.max(
+    DISPLAY_COUNT,
+    Math.min(renderCountProp, values.length * 2)
+  );
   const circular = values.length >= DISPLAY_COUNT;
   const [height, setHeight] = useState(
-    typeof containerStyle?.height == 'number' ? containerStyle.height : 100
+    typeof containerStyle?.height === 'number' ? containerStyle.height : 100
   );
+  const radius = wheelHeight != null ? wheelHeight / 2 : height / 2;
 
   const valueIndex = useMemo(() => values.indexOf(value), [values, value]);
 
@@ -69,7 +74,7 @@ export default function Wheel<T>({
         onScroll && onScroll(false);
         translateY.current.extractOffset();
         let newValueIndex =
-          valueIndex - Math.round(gestureState.dy / (itemHeight + itemGap));
+          valueIndex - Math.round(gestureState.dy / itemHeight);
         if (circular)
           newValueIndex = (newValueIndex + values.length) % values.length;
         else {
@@ -85,16 +90,7 @@ export default function Wheel<T>({
         } else setValue(newValue);
       },
     });
-  }, [
-    circular,
-    itemGap,
-    itemHeight,
-    onScroll,
-    setValue,
-    value,
-    valueIndex,
-    values,
-  ]);
+  }, [circular, itemHeight, onScroll, setValue, value, valueIndex, values]);
 
   const displayValues = useMemo(() => {
     const centerIndex = Math.floor(renderCount / 2);
@@ -118,20 +114,20 @@ export default function Wheel<T>({
     return displayValues.map((_, index) =>
       translateY.current
         .interpolate({
-          inputRange: [-height / 2, height / 2],
+          inputRange: [-radius, radius],
           outputRange: [
-            -height / 2 + (itemHeight + itemGap) * (index - currentIndex),
-            height / 2 + (itemHeight + itemGap) * (index - currentIndex),
+            -radius + ((radius * 2) / 5) * (index - currentIndex),
+            radius + ((radius * 2) / 5) * (index - currentIndex),
           ],
           extrapolate: 'extend',
         })
         .interpolate({
-          inputRange: [-height / 2, height / 2],
+          inputRange: [-radius, radius],
           outputRange: [-Math.PI / 2, Math.PI / 2],
           // extrapolate: 'clamp'
         })
     );
-  }, [displayValues, height, itemGap, itemHeight, value]);
+  }, [displayValues, radius, value]);
 
   return (
     <View
@@ -152,7 +148,7 @@ export default function Wheel<T>({
                 transform: [
                   {
                     translateY: Animated.multiply(
-                      height / 2,
+                      radius,
                       AnimatedMath.sin(animatedAngle)
                     ),
                   },
@@ -181,7 +177,7 @@ export default function Wheel<T>({
 
 const styles = StyleSheet.create({
   container: {
-    height: 100,
+    height: '100%',
     minWidth: 30,
     overflow: 'hidden',
     alignItems: 'center',
