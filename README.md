@@ -4,8 +4,7 @@ Simple and pure js time picker for react-native. It provides the same UI for And
 
 |                                                            Android                                                             |                                                              IOS                                                               |
 | :----------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
-| ![Jun-17-2021 12-57-47](https://user-images.githubusercontent.com/17980230/122329052-b16b9480-cf6b-11eb-867a-13cccf114b91.gif) | ![Jun-17-2021 12-59-10](https://user-images.githubusercontent.com/17980230/122329138-d4964400-cf6b-11eb-80b6-2a20838b4502.gif)
- |
+| ![Jun-18-2021 14-16-57](https://user-images.githubusercontent.com/17980230/122510071-e6491b80-d03f-11eb-8c47-ac670fa4555e.gif) | ![Jun-18-2021 14-16-45](https://user-images.githubusercontent.com/17980230/122510087-ee08c000-d03f-11eb-8f46-a25817109316.gif) |
 
 ## Installation
 
@@ -33,14 +32,16 @@ npm install react-native-wheel-time-picker
 
 |                | necessary | types     | default   | info                    |
 | -------------- | :-------: | --------- | --------- | ----------------------- |
+| wheelHeight    |           | number    | 70        | Wheel height            |
+| displayCount   |           | number    | 5         | Number of items to show in front of the wheel.   |
 | containerStyle |           | ViewStyle | undefined | Wheel container style   |
 | itemHeight     |           | number    | 15        | Wheel item height       |
-| itemGap        |           | number    | 10        | Gap between items       |
 | selectedColor  |           | string    | 'black'   | Selected item color     |
 | disabledColor  |           | string    | 'gray'    | Other items color       |
 | textStyle      |           | TextStyle | undefined | Text style of each item |
 
 ### Other Wheel Props
+Below props are provided by the TimePicker component.
 
 |             | necessary | types                          | default   | info                                                                                                               |
 | ----------- | :-------: | ------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -48,7 +49,6 @@ npm install react-native-wheel-time-picker
 | setValue    |     v     | (newValue: string) => void     |           | Changing value function                                                                                            |
 | values      |     v     | string[]                       |           | List of values to choose from                                                                                      |
 | onScroll    |           | (scrollState: boolean) => void | undefined | a callback function. it may be used when the TimePicker is inside of a scroll view to preventing the outer scroll. |
-| renderCount |           | number                         |           | Number of item to render                                                                                           |
 
 ## Usage
 
@@ -76,6 +76,10 @@ export default function App() {
     <View style={styles.container}>
       <TimePicker
         value={timeValue}
+        wheelProps={{
+          wheelHeight: 70,
+          itemHeight: 15,
+        }}
         onChange={(newValue) => setTimeValue(newValue)}
       />
       <Text style={styles.timeValue}>{`${hour < 10 ? '0' : ''}${hour}:${

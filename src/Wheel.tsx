@@ -20,6 +20,7 @@ export interface WheelStyleProps {
   disabledColor?: string;
   textStyle?: TextStyle;
   wheelHeight?: number;
+  displayCount?: number;
 }
 
 export interface WheelProps<T> extends WheelStyleProps {
@@ -27,7 +28,6 @@ export interface WheelProps<T> extends WheelStyleProps {
   setValue: (value: T) => void;
   values: T[];
   onScroll?: (scrollState: boolean) => void;
-  displayCount?: number;
 }
 
 export default function Wheel<T>({
