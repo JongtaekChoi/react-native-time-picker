@@ -8,8 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import React, { useMemo, useRef, useState } from 'react';
-// @ts-ignore
-import AnimatedMath from 'react-native-animated-math';
+import { sin } from './AnimatedMath';
 
 const Value = Animated.createAnimatedComponent(Text);
 
@@ -143,10 +142,7 @@ export default function Wheel<T>({
                 height: itemHeight,
                 transform: [
                   {
-                    translateY: Animated.multiply(
-                      radius,
-                      AnimatedMath.sin(animatedAngle)
-                    ),
+                    translateY: Animated.multiply(radius, sin(animatedAngle)),
                   },
                   {
                     rotateX: animatedAngle.interpolate({
