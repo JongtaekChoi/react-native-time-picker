@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
 ```
 
 ## Animated sine function
-The sin function of the AnimatedMath.ts file is really inspired by 'react-native-animated-math' package. We tried to import the package and use it, but there was a performance issue, so we created a new function that omitted some terms. The function uses the Taylor series approximation as below.
+The sin function of the AnimatedMath.ts file is really inspired by ['react-native-animated-math'](https://github.com/rastapasta/react-native-animated-math) package. We tried to import the package and use it, but there was a performance issue, so we created a new function that omitted some terms. The function uses the Taylor series approximation as below.
 ```
  x - x^3 / 3! + x^5 / 5! - x^7 / 7!
 ``` 
