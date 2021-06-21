@@ -119,7 +119,7 @@ export default function Wheel<T>({
         .interpolate({
           inputRange: [-radius, radius],
           outputRange: [-Math.PI / 2, Math.PI / 2],
-          // extrapolate: 'clamp'
+          extrapolate: 'clamp',
         })
     );
   }, [displayValues, radius, value, displayCount]);
