@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/react-native-wheel-time-picker.svg)](https://badge.fury.io/js/react-native-wheel-time-picker)
+
 # react-native-wheel-time-picker
 
 Simple and pure js time picker for react-native. It provides the same UI for Android and IOS. You can use the Wheel component independantly.
