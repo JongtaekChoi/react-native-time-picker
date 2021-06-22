@@ -44,7 +44,10 @@ export default function Wheel<T>({
   displayCount = 5,
 }: WheelProps<T>): React.ReactElement {
   const translateY = useRef(new Animated.Value(0));
-  const renderCount = displayCount * 4 + 1;
+  const renderCount =
+    displayCount * 2 < values.length
+      ? displayCount * 4 + 1
+      : displayCount * 2 - 1;
   const circular = values.length >= displayCount;
   const [height, setHeight] = useState(
     typeof containerStyle?.height === 'number' ? containerStyle.height : 100
@@ -69,7 +72,8 @@ export default function Wheel<T>({
         onScroll && onScroll(false);
         translateY.current.extractOffset();
         let newValueIndex =
-          valueIndex - Math.round(gestureState.dy / itemHeight);
+          valueIndex -
+          Math.round(gestureState.dy / ((radius * 2) / displayCount));
         if (circular)
           newValueIndex = (newValueIndex + values.length) % values.length;
         else {
@@ -85,7 +89,16 @@ export default function Wheel<T>({
         } else setValue(newValue);
       },
     });
-  }, [circular, itemHeight, onScroll, setValue, value, valueIndex, values]);
+  }, [
+    circular,
+    displayCount,
+    onScroll,
+    radius,
+    setValue,
+    value,
+    valueIndex,
+    values,
+  ]);
 
   const displayValues = useMemo(() => {
     const centerIndex = Math.floor(renderCount / 2);
@@ -155,9 +168,9 @@ export default function Wheel<T>({
                 color: displayValue === value ? selectedColor : disabledColor,
               },
             ]}
-            key={`${index > displayValues.length / 2 ? 'Post' : 'Before'}${
-              displayValue ?? 'null' + index
-            }`}
+            key={`${value}${
+              index > displayValues.length / 2 ? 'Post' : 'Before'
+            }${displayValue ?? 'null' + index}`}
           >
             {displayValue}
           </Value>
