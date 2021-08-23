@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import TimePicker from 'react-native-wheel-time-picker';
+import TimePicker, { TimeType } from 'react-native-wheel-time-picker';
 import { useMemo } from 'react';
 
 const MILLISECONDS_PER_MINUTE = 60 * 1000;
@@ -26,6 +26,7 @@ export default function App() {
           itemHeight: 15,
         }}
         value={timeValue}
+        timeFormat={[TimeType.hours12, ':', TimeType.min, TimeType.ampm]}
         onChange={(newValue) => setTimeValue(newValue)}
       />
       <Text style={styles.timeValue}>{`${hour < 10 ? '0' : ''}${hour}:${

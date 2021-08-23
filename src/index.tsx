@@ -1,5 +1,5 @@
-import TimePicker from './TimePicker';
-import Wheel from './Wheel';
+import TimePicker, { TimeType } from './TimePicker';
+import Wheel, { WheelStyleProps } from './Wheel';
 
-export { Wheel };
+export { Wheel, WheelStyleProps, TimeType };
 export default TimePicker;

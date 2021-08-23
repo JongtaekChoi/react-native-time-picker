@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 /* eslint-disable radix */
 import {
   StyleProp,
@@ -13,6 +13,16 @@ import Wheel, { WheelStyleProps } from './Wheel';
 const MILLISECONDS_PER_MINUTE = 60 * 1000;
 const MILLISECONDS_PER_HOUR = MILLISECONDS_PER_MINUTE * 60;
 const MILLISECONDS_PER_DAY = MILLISECONDS_PER_HOUR * 24;
+
+export enum TimeType {
+  hours24 = 'hours24',
+  hours12 = 'hours12',
+  min = 'min',
+  sec = 'sec',
+  ampm = 'am/pm',
+}
+
+const DEFAULT_TYPE_TYPES = [TimeType.ampm, TimeType.hours12, ':', TimeType.min];
 
 const styles = StyleSheet.create({
   container: {
@@ -45,8 +55,7 @@ interface Props {
   onScroll?: (scrollState: boolean) => void;
   textStyle?: TextStyle;
   wheelProps?: WheelStyleProps;
-  use24HourSystem?: boolean;
-  showSeconds?: boolean;
+  timeFormat?: (string | TimeType)[];
 }
 
 export default function TimePicker({
@@ -56,8 +65,7 @@ export default function TimePicker({
   containerStyle,
   textStyle,
   wheelProps = {},
-  use24HourSystem,
-  showSeconds,
+  timeFormat = DEFAULT_TYPE_TYPES,
 }: Props): React.ReactElement {
   const [current, setCurrent] = useState(
     (value ?? Date.now()) % MILLISECONDS_PER_DAY
@@ -97,66 +105,88 @@ export default function TimePicker({
     [hour, minute, onChange, second]
   );
 
-  const displayHourValue = useMemo(() => {
-    let displayHour = use24HourSystem ? hour : hour % 12;
-    if (!use24HourSystem && displayHour === 0) displayHour = 12;
-    return displayHour < 10 ? `0${displayHour}` : `${displayHour}`;
-  }, [hour, use24HourSystem]);
   return (
     <View style={[styles.container, containerStyle]}>
-      {!use24HourSystem && (
-        <Wheel
-          key={'am/pm'}
-          value={hour >= 12 ? 'PM' : 'AM'}
-          values={['AM', 'PM']}
-          setValue={(newValue) => {
-            changeTimeValue('hour', (hour % 12) + (newValue === 'PM' ? 12 : 0));
-          }}
-          onScroll={onScroll}
-          textStyle={textStyle}
-          {...wheelProps}
-        />
-      )}
-      <Wheel
-        key={'hour'}
-        value={displayHourValue}
-        values={use24HourSystem ? TWENTY_FOUR_LIST : TWELVE_LIST}
-        setValue={(newValue) => {
-          changeTimeValue(
-            'hour',
-            (parseInt(newValue) % 12) + (hour >= 12 ? 12 : 0)
-          );
-        }}
-        onScroll={onScroll}
-        textStyle={textStyle}
-        {...wheelProps}
-      />
-      <Text style={textStyle}>:</Text>
-      <Wheel
-        key={'min'}
-        value={minute < 10 ? `0${minute}` : `${minute}`}
-        values={SIXTY_LIST}
-        setValue={(newValue) => changeTimeValue('minute', parseInt(newValue))}
-        onScroll={onScroll}
-        textStyle={textStyle}
-        {...wheelProps}
-      />
-      {showSeconds && (
-        <>
-          <Text style={textStyle}>:</Text>
-          <Wheel
-            key={'sec'}
-            value={second < 10 ? `0${second}` : `${second}`}
-            values={SIXTY_LIST}
-            setValue={(newValue) =>
-              changeTimeValue('second', parseInt(newValue))
-            }
-            onScroll={onScroll}
-            textStyle={textStyle}
-            {...wheelProps}
-          />
-        </>
-      )}
+      {timeFormat.map((timeType) => {
+        switch (timeType) {
+          case TimeType.ampm:
+            return (
+              <Wheel
+                key={'am/pm'}
+                value={hour >= 12 ? 'PM' : 'AM'}
+                values={['AM', 'PM']}
+                setValue={(newValue) => {
+                  changeTimeValue(
+                    'hour',
+                    (hour % 12) + (newValue === 'PM' ? 12 : 0)
+                  );
+                }}
+                onScroll={onScroll}
+                textStyle={textStyle}
+                {...wheelProps}
+              />
+            );
+
+          case TimeType.hours24:
+          // eslint-disable-next-line no-fallthrough
+          case TimeType.hours12:
+            const use24HourSystem = timeType === TimeType.hours24;
+            let displayHour = use24HourSystem ? hour : hour % 12;
+            if (!use24HourSystem && displayHour === 0) displayHour = 12;
+            const displayHourValue =
+              displayHour < 10 ? `0${displayHour}` : `${displayHour}`;
+            return (
+              <Wheel
+                key={'hour'}
+                value={displayHourValue}
+                values={use24HourSystem ? TWENTY_FOUR_LIST : TWELVE_LIST}
+                setValue={(newValue) => {
+                  changeTimeValue(
+                    'hour',
+                    (parseInt(newValue) % 12) + (hour >= 12 ? 12 : 0)
+                  );
+                }}
+                onScroll={onScroll}
+                textStyle={textStyle}
+                {...wheelProps}
+              />
+            );
+          case TimeType.min:
+            return (
+              <Wheel
+                key={'min'}
+                value={minute < 10 ? `0${minute}` : `${minute}`}
+                values={SIXTY_LIST}
+                setValue={(newValue) =>
+                  changeTimeValue('minute', parseInt(newValue))
+                }
+                onScroll={onScroll}
+                textStyle={textStyle}
+                {...wheelProps}
+              />
+            );
+          case TimeType.sec:
+            return (
+              <Wheel
+                key={'sec'}
+                value={second < 10 ? `0${second}` : `${second}`}
+                values={SIXTY_LIST}
+                setValue={(newValue) =>
+                  changeTimeValue('second', parseInt(newValue))
+                }
+                onScroll={onScroll}
+                textStyle={textStyle}
+                {...wheelProps}
+              />
+            );
+          default:
+            return (
+              <Text key={timeType} style={textStyle}>
+                {timeType}
+              </Text>
+            );
+        }
+      })}
     </View>
   );
 }

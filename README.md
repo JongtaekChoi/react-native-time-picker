@@ -18,39 +18,39 @@ npm install react-native-wheel-time-picker
 
 ### TimePicker Props
 
-|                | necessary | types                          | default   | info                                                                                                               |
-| -------------- | :-------: | ------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------ |
-| label          |           | string                         | undefined |                                                                                                                    |
-| value          |           | number                         | undefined | millisecond value after 0 0                                                                                        |
-| onChange       |           | (newValue: number) => void     | undefined | changing value function                                                                                            |
-| containerStyle |           | ViewStyle                      | undefined | container style                                                                                                    |
-| onScroll       |           | (scrollState: boolean) => void | undefined | a callback function. it may be used when the TimePicker is inside of a scroll view to preventing the outer scroll. |
-| textStyle      |           | TextStyle                      | undefined | text style                                                                                                         |
-| use24HourSystem|           | boolean                        | undefined | show the time in 24-hour system format                   |
-| showSeconds    |           | boolean                        | undefined | show seconds value                |
-| wheelProps     |           | StyleProps type of Wheel       | undefined | see next                                                                                                           |
+|                | necessary | types                          | default    | info                                                                                                               |
+| -------------- | :-------: | ------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------ |
+| label          |           | string                         | undefined  |                                                                                                                    |
+| value          |           | number                         | undefined  | millisecond value after 0 0                                                                                        |
+| onChange       |           | (newValue: number) => void     | undefined  | changing value function                                                                                            |
+| containerStyle |           | ViewStyle                      | undefined  | container style                                                                                                    |
+| onScroll       |           | (scrollState: boolean) => void | undefined  | a callback function. it may be used when the TimePicker is inside of a scroll view to preventing the outer scroll. |
+| textStyle      |           | TextStyle                      | undefined  | text style                                                                                                         |
+| timeFormat     |           | ( TimeType                     | string )[] | ['ampm', 'hours12', ':', 'min']                                                                                    |
+| wheelProps     |           | StyleProps type of Wheel       | undefined  | see next                                                                                                           |
 
 ### Wheel StyleProps
 
-|                | necessary | types     | default   | info                    |
-| -------------- | :-------: | --------- | --------- | ----------------------- |
-| wheelHeight    |           | number    | 70        | Wheel height            |
-| displayCount   |           | number    | 5         | Number of items to show in front of the wheel.   |
-| containerStyle |           | ViewStyle | undefined | Wheel container style   |
-| itemHeight     |           | number    | 15        | Wheel item height       |
-| selectedColor  |           | string    | 'black'   | Selected item color     |
-| disabledColor  |           | string    | 'gray'    | Other items color       |
-| textStyle      |           | TextStyle | undefined | Text style of each item |
+|                | necessary | types     | default   | info                                           |
+| -------------- | :-------: | --------- | --------- | ---------------------------------------------- |
+| wheelHeight    |           | number    | 70        | Wheel height                                   |
+| displayCount   |           | number    | 5         | Number of items to show in front of the wheel. |
+| containerStyle |           | ViewStyle | undefined | Wheel container style                          |
+| itemHeight     |           | number    | 15        | Wheel item height                              |
+| selectedColor  |           | string    | 'black'   | Selected item color                            |
+| disabledColor  |           | string    | 'gray'    | Other items color                              |
+| textStyle      |           | TextStyle | undefined | Text style of each item                        |
 
 ### Other Wheel Props
+
 Below props are provided by the TimePicker component.
 
-|             | necessary | types                          | default   | info                                                                                                               |
-| ----------- | :-------: | ------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------ |
-| value       |     v     | string                         |           | item value                                                                                                         |
-| setValue    |     v     | (newValue: string) => void     |           | Changing value function                                                                                            |
-| values      |     v     | string[]                       |           | List of values to choose from                                                                                      |
-| onScroll    |           | (scrollState: boolean) => void | undefined | a callback function. it may be used when the TimePicker is inside of a scroll view to preventing the outer scroll. |
+|          | necessary | types                          | default   | info                                                                                                               |
+| -------- | :-------: | ------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------ |
+| value    |     v     | string                         |           | item value                                                                                                         |
+| setValue |     v     | (newValue: string) => void     |           | Changing value function                                                                                            |
+| values   |     v     | string[]                       |           | List of values to choose from                                                                                      |
+| onScroll |           | (scrollState: boolean) => void | undefined | a callback function. it may be used when the TimePicker is inside of a scroll view to preventing the outer scroll. |
 
 ## Usage
 
@@ -104,17 +104,20 @@ const styles = StyleSheet.create({
 ```
 
 ## Animated sine function
+
 The sin function of the AnimatedMath.ts file is really inspired by ['react-native-animated-math'](https://github.com/rastapasta/react-native-animated-math) package. We tried to import the package and use it, but there was a performance issue, so we created a new function that omitted some terms. The function uses the Taylor series approximation as below.
+
 ```
  x - x^3 / 3! + x^5 / 5! - x^7 / 7!
-``` 
-The x value range is [-PI , PI] so it's maximum error will be 
+```
+
+The x value range is [-PI , PI] so it's maximum error will be
+
 ```
 PI^9 / 9! = 0.08214 .....
 ```
+
 If the x range is [-PI/2, PI/2] than the maximum error will be about 0.00016 ....
-
-
 
 ## Contributing
 
