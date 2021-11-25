@@ -180,11 +180,7 @@ export default function TimePicker({
               />
             );
           default:
-            return (
-              <Text key={timeType} style={textStyle}>
-                {timeType}
-              </Text>
-            );
+            return <Text style={textStyle}>{timeType}</Text>;
         }
       })}
     </View>
